@@ -13,7 +13,7 @@ public class Calculation
 
         if (calculateRequest.Kiosk!.Location!.Floor != calculateRequest.Store!.Location.Floor)
         {
-            // Merdiven Asansör yakınlığı.
+            // Merdiven Asansör'den yakın olanı seç.
             foreach (var verticalTransport in StaticData.VerticalTransportations)
             {
                 var colDifference = Math.Abs(calculateRequest.Kiosk.Location.Column - verticalTransport.Location.Column);
@@ -29,7 +29,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Kiosk.Location.Row)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column.ToString()}");
                         calculateRequest.Kiosk.Location.Row++;
                     }
                 }
@@ -38,7 +38,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Kiosk.Location.Row)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column.ToString()}");
                         calculateRequest.Kiosk.Location.Row--;
                     }
                 }
@@ -50,7 +50,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Kiosk.Location.Column)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{calculateRequest.Kiosk.Location.Column + 1}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column + 1).ToString()}");
                         calculateRequest.Kiosk.Location.Column++;
                     }
                 }
@@ -59,7 +59,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Kiosk.Location.Column)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{calculateRequest.Kiosk.Location.Column - 1}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column - 1).ToString()}");
                         calculateRequest.Kiosk.Location.Column--;
                     }
                 }
@@ -75,7 +75,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        path.Add($"{closeTransport.Location.Row + 1}|{closeTransport.Location.Column}");
+                        path.Add($"{closeTransport.Location.Row + 1}|{closeTransport.Location.Column.ToString()}");
                         closeTransport.Location.Row++;
                     }
                 }
@@ -84,7 +84,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        path.Add($"{closeTransport.Location.Row - 1}|{closeTransport.Location.Column}");
+                        path.Add($"{closeTransport.Location.Row - 1}|{closeTransport.Location.Column.ToString()}");
                         closeTransport.Location.Row--;
                     }
                 }
@@ -96,7 +96,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Store.Location.Column)
                     {
-                        path.Add($"{closeTransport.Location.Row}|{closeTransport.Location.Column + 1}");
+                        path.Add($"{closeTransport.Location.Row}|{(closeTransport.Location.Column + 1).ToString()}");
                         closeTransport.Location.Column++;
                     }
                 }
@@ -105,7 +105,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Store.Location.Column)
                     {
-                        path.Add($"{closeTransport.Location.Row}|{closeTransport.Location.Column - 1}");
+                        path.Add($"{closeTransport.Location.Row}|{(closeTransport.Location.Column - 1).ToString()}");
                         closeTransport.Location.Column--;
                     }
                 }
@@ -118,47 +118,47 @@ public class Calculation
             // while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column &&
             //        calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
             // {
-                if (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
+            if (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
+            {
+                if (calculateRequest.Kiosk.Location.Row < calculateRequest.Store.Location.Row)
                 {
-                    if (calculateRequest.Kiosk.Location.Row < calculateRequest.Store.Location.Row)
+                    while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
-                        {
-                            path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column} ");
-                            calculateRequest.Kiosk.Location.Row++;
-                        }
-                    }
-
-                    if (calculateRequest.Kiosk.Location.Row > calculateRequest.Store.Location.Row)
-                    {
-                        while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
-                        {
-                            path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column} ");
-                            calculateRequest.Kiosk.Location.Row--;
-                        }
+                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column.ToString()} ");
+                        calculateRequest.Kiosk.Location.Row++;
                     }
                 }
 
-                if (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+                if (calculateRequest.Kiosk.Location.Row > calculateRequest.Store.Location.Row)
                 {
-                    if (calculateRequest.Kiosk.Location.Column < calculateRequest.Store.Location.Column)
+                    while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
-                        {
-                            path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column + 1).ToString()} ");
-                            closeTransport.Location.Column++;
-                        }
-                    }
-
-                    if (calculateRequest.Kiosk.Location.Column > calculateRequest.Store.Location.Column)
-                    {
-                        while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
-                        {
-                            path.Add($"{calculateRequest.Kiosk.Location.Row}|{calculateRequest.Kiosk.Location.Column - 1} ");
-                            calculateRequest.Kiosk.Location.Column--;
-                        }
+                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column.ToString()} ");
+                        calculateRequest.Kiosk.Location.Row--;
                     }
                 }
+            }
+
+            if (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+            {
+                if (calculateRequest.Kiosk.Location.Column < calculateRequest.Store.Location.Column)
+                {
+                    while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+                    {
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column + 1).ToString()} ");
+                        closeTransport.Location.Column++;
+                    }
+                }
+
+                if (calculateRequest.Kiosk.Location.Column > calculateRequest.Store.Location.Column)
+                {
+                    while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+                    {
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column - 1).ToString()} ");
+                        calculateRequest.Kiosk.Location.Column--;
+                    }
+                }
+            }
             // }
         }
 
