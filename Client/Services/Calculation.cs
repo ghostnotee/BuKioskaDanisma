@@ -5,13 +5,13 @@ namespace Client.Services;
 
 public class Calculation
 {
-    public List<string> GetStoreWay(CalculateRequest calculateRequest)
+    public List<string> GetStoreWay(CalculateRequest? calculateRequest)
     {
-        List<string> path = [$"{calculateRequest.Kiosk!.Id}. Kiosktan {calculateRequest.Store!.Name} mağazasına giden yol: "];
+        List<string> path = [$"{calculateRequest!.Kiosk!.Id}. Kiosktan {calculateRequest!.Store!.Name} mağazasına giden yol: "];
         var totalDistance = 100;
         var closeTransport = new VerticalTransportation();
 
-        if (calculateRequest.Kiosk!.Location!.Floor != calculateRequest.Store!.Location.Floor)
+        if (calculateRequest.Kiosk.Location!.Floor != calculateRequest.Store!.Location.Floor)
         {
             // Merdiven ve Asansör'den yakın olanı seç.
             foreach (var verticalTransport in StaticData.VerticalTransportations)
@@ -112,7 +112,6 @@ public class Calculation
                     }
                 }
             }
-
             return path;
         }
 

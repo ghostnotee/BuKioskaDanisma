@@ -7,7 +7,7 @@ namespace Client.Pages;
 
 public partial class Home : ComponentBase
 {
-    private readonly CalculateRequest _calculateRequest = new();
+    private CalculateRequest? _calculateRequest = new();
     private string _kioskId = null!;
     private List<Kiosk> _kiosks = null!;
     private List<string>? _path = new();
@@ -17,19 +17,21 @@ public partial class Home : ComponentBase
     private void CurrentKiosk(string id)
     {
         _kioskId = id;
-        _calculateRequest.Kiosk = _kiosks.Find(x => x.Id == Convert.ToUInt16(id));
+        _calculateRequest!.Kiosk = _kiosks.Find(x => x.Id == Convert.ToUInt16(id));
     }
 
     private void CurrentStore(string name)
     {
         _storeName = name;
-        _calculateRequest.Store = _stores.Find(x => x.Name == name);
+        _calculateRequest!.Store = _stores.Find(x => x.Name == name);
+        
     }
 
     private void HandleCalculate()
     {
         Calculation calculation = new();
         _path = calculation.GetStoreWay(_calculateRequest);
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
