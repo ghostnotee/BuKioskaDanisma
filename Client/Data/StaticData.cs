@@ -6,7 +6,7 @@ public static class StaticData
 {
     public static List<Store> Stores =
     [
-        new Store("STB", new Location('D', 1, 1)),
+        new Store("STB", new Location('D', 3, 1)),
         new Store("LCW", new Location('B', 7, 1)),
         new Store("KTN", new Location('H', 7, 1)),
         new Store("BGR", new Location('C', 6, 2))

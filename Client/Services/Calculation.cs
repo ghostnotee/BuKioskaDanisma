@@ -5,13 +5,13 @@ namespace Client.Services;
 
 public class Calculation
 {
-    public List<string>? GetStoreWay(CalculateRequest calculateRequest)
+    public List<string> GetStoreWay(CalculateRequest? calculateRequest)
     {
-        List<string> path = [$"{calculateRequest.Kiosk!.Id}. Kiosktan {calculateRequest.Store!.Name} mağazasına giden yol:"];
+        List<string> path = [$"{calculateRequest!.Kiosk!.Id}. Kiosktan {calculateRequest!.Store!.Name} mağazasına giden yol: "];
         var totalDistance = 100;
         var closeTransport = new VerticalTransportation();
 
-        if (calculateRequest.Kiosk!.Location!.Floor != calculateRequest.Store!.Location.Floor)
+        if (calculateRequest.Kiosk.Location!.Floor != calculateRequest.Store!.Location.Floor)
         {
             // Merdiven ve Asansör'den yakın olanı seç.
             foreach (var verticalTransport in StaticData.VerticalTransportations)
@@ -25,41 +25,45 @@ public class Calculation
 
             if (calculateRequest.Kiosk.Location.Row != closeTransport.Location.Row)
             {
+                // x eksenine göre hareketin tespiti
                 if (calculateRequest.Kiosk.Location.Row < closeTransport.Location.Row)
                 {
-                    while (closeTransport.Location.Row != calculateRequest.Kiosk.Location.Row)
+                    while (calculateRequest.Kiosk.Location.Row != closeTransport.Location.Row)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column.ToString()}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}{calculateRequest.Kiosk.Location.Column}, ");
                         calculateRequest.Kiosk.Location.Row++;
                     }
                 }
 
-                if (closeTransport.Location.Row > calculateRequest.Kiosk.Location.Row)
+                // x eksenine göre hareketin tespiti.
+                if (calculateRequest.Kiosk.Location.Row > closeTransport.Location.Row)
                 {
-                    while (closeTransport.Location.Row != calculateRequest.Kiosk.Location.Row)
+                    while (calculateRequest.Kiosk.Location.Row != closeTransport.Location.Row)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column.ToString()}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}{calculateRequest.Kiosk.Location.Column}, ");
                         calculateRequest.Kiosk.Location.Row--;
                     }
                 }
             }
 
-            if (closeTransport.Location.Column != calculateRequest.Kiosk.Location.Column)
+            if (calculateRequest.Kiosk.Location.Column != closeTransport.Location.Column)
             {
-                if (closeTransport.Location.Column < calculateRequest.Kiosk.Location.Column)
+                // y ekseni hareketi yönü
+                if (calculateRequest.Kiosk.Location.Column < closeTransport.Location.Column)
                 {
-                    while (closeTransport.Location.Column != calculateRequest.Kiosk.Location.Column)
+                    while (calculateRequest.Kiosk.Location.Column != closeTransport.Location.Column)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column + 1).ToString()}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}{Convert.ToChar(calculateRequest.Kiosk.Location.Column + 1)}, ");
                         calculateRequest.Kiosk.Location.Column++;
                     }
                 }
 
-                if (closeTransport.Location.Column > calculateRequest.Kiosk.Location.Column)
+                // y ekseni hareketi yönü
+                if (calculateRequest.Kiosk.Location.Column > closeTransport.Location.Column)
                 {
-                    while (closeTransport.Location.Column != calculateRequest.Kiosk.Location.Column)
+                    while (calculateRequest.Kiosk.Location.Column != closeTransport.Location.Column)
                     {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column - 1).ToString()}");
+                        path.Add($"{calculateRequest.Kiosk.Location.Row}{Convert.ToChar(calculateRequest.Kiosk.Location.Column - 1)}, ");
                         calculateRequest.Kiosk.Location.Column--;
                     }
                 }
@@ -73,7 +77,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        path.Add($"{closeTransport.Location.Row + 1}|{closeTransport.Location.Column.ToString()}");
+                        path.Add($"{closeTransport.Location.Row + 1}{closeTransport.Location.Column}");
                         closeTransport.Location.Row++;
                     }
                 }
@@ -82,7 +86,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Row != calculateRequest.Store.Location.Row)
                     {
-                        path.Add($"{closeTransport.Location.Row - 1}|{closeTransport.Location.Column.ToString()}");
+                        path.Add($"{closeTransport.Location.Row - 1}{closeTransport.Location.Column}");
                         closeTransport.Location.Row--;
                     }
                 }
@@ -94,7 +98,7 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Store.Location.Column)
                     {
-                        path.Add($"{closeTransport.Location.Row}|{(closeTransport.Location.Column + 1).ToString()}");
+                        path.Add($"{closeTransport.Location.Row}{Convert.ToChar(closeTransport.Location.Column + 1)}");
                         closeTransport.Location.Column++;
                     }
                 }
@@ -103,61 +107,59 @@ public class Calculation
                 {
                     while (closeTransport.Location.Column != calculateRequest.Store.Location.Column)
                     {
-                        path.Add($"{closeTransport.Location.Row}|{(closeTransport.Location.Column - 1).ToString()}");
+                        path.Add($"{closeTransport.Location.Row}{Convert.ToChar(closeTransport.Location.Column - 1)}");
                         closeTransport.Location.Column--;
                     }
                 }
             }
+            return path;
         }
-        else
+
+        // Aynı Katta iseler
+        if (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
         {
-            // Aynı Katta iseler
-
-            // while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column &&
-            //        calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
-            // {
-            if (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
+            // Varılacak Noktanın y eksenine göre haretinin tespiti.
+            if (calculateRequest.Kiosk.Location.Row < calculateRequest.Store.Location.Row)
             {
-                if (calculateRequest.Kiosk.Location.Row < calculateRequest.Store.Location.Row)
+                while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
                 {
-                    while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
-                    {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row + 1}|{calculateRequest.Kiosk.Location.Column.ToString()} ");
-                        calculateRequest.Kiosk.Location.Row++;
-                    }
-                }
-
-                if (calculateRequest.Kiosk.Location.Row > calculateRequest.Store.Location.Row)
-                {
-                    while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
-                    {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row - 1}|{calculateRequest.Kiosk.Location.Column.ToString()} ");
-                        calculateRequest.Kiosk.Location.Row--;
-                    }
+                    path.Add($"{calculateRequest.Kiosk.Location.Row + 1}{calculateRequest.Kiosk.Location.Column}, ");
+                    calculateRequest.Kiosk.Location.Row++;
                 }
             }
 
-            if (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+            // Varılacak Noktanın y eksenine göre haretinin tespiti.
+            if (calculateRequest.Kiosk.Location.Row > calculateRequest.Store.Location.Row)
             {
-                if (calculateRequest.Kiosk.Location.Column < calculateRequest.Store.Location.Column)
+                while (calculateRequest.Kiosk.Location.Row != calculateRequest.Store.Location.Row)
                 {
-                    while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
-                    {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column + 1).ToString()} ");
-                        closeTransport.Location.Column++;
-                    }
-                }
-
-                if (calculateRequest.Kiosk.Location.Column > calculateRequest.Store.Location.Column)
-                {
-                    while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
-                    {
-                        path.Add($"{calculateRequest.Kiosk.Location.Row}|{(calculateRequest.Kiosk.Location.Column - 1).ToString()} ");
-                        calculateRequest.Kiosk.Location.Column--;
-                    }
+                    path.Add($"{calculateRequest.Kiosk.Location.Row - 1}{calculateRequest.Kiosk.Location.Column}, ");
+                    calculateRequest.Kiosk.Location.Row--;
                 }
             }
-            // }
+        }
+
+        if (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+        {
+            // Varılacak noktanın x eksenine göre hareketinin tespiti.
+            if (calculateRequest.Kiosk.Location.Column < calculateRequest.Store.Location.Column)
+            {
+                while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+                {
+                    path.Add($"{calculateRequest.Kiosk.Location.Row}{Convert.ToChar(calculateRequest.Kiosk.Location.Column + 1)}, ");
+                    closeTransport.Location.Column++;
+                }
+            }
+
+            // Varılacak noktanın x eksenine göre hareketinin tespiti.
+            if (calculateRequest.Kiosk.Location.Column > calculateRequest.Store.Location.Column)
+            {
+                while (calculateRequest.Kiosk.Location.Column != calculateRequest.Store.Location.Column)
+                {
+                    path.Add($"{calculateRequest.Kiosk.Location.Row}{Convert.ToChar(calculateRequest.Kiosk.Location.Column - 1)}, ");
+                    calculateRequest.Kiosk.Location.Column--;
+                }
+            }
         }
 
         return path;
