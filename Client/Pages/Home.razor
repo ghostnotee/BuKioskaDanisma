@@ -1,7 +1,38 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Mağaza Tarifi</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<div class="container">
+    <div class="row">
+        <h2>Ekran ve Gitmek istediğiniz mağazayı seçiniz</h2>
+        <EditForm Model="_calculateRequest" OnSubmit="HandleCalculate">
+            <div class="form-group mt-4">
+                <label>Kiosk :</label>
+                <InputSelect TValue="string" Value="_kioskId" ValueChanged="CurrentKiosk" ValueExpression="@(() => _kioskId!)">
+                    <option value="" selected>Bulunduğunuz kiosk ekranı seçin...</option>
+                    @foreach (var kiosk in _kiosks!)
+                    {
+                        <option value="@kiosk.Id.ToString()">@kiosk.Id.ToString()</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group mt-4">
+                <label>Mağaza :</label>
+                <InputSelect TValue="string" Value="_storeName" ValueChanged="CurrentStore" ValueExpression="@(() => _storeName!)">
+                    <option value="" selected>Mağazayı seçin...</option>
+                    @foreach (var store in _stores!)
+                    {
+                        <option value="@store.Name">@store.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group mt-4">
+                <input type="submit" class="btn btn-success" value="Yol Tarifini getir" />
+            </div>
+        </EditForm>
+    </div>
+    @if (_path!.Count > 0)
+    {
+        <h5 class="mt-4">@(string.Join(' ', _path))</h5>
+    }
+</div>
