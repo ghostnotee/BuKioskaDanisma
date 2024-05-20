@@ -17,7 +17,7 @@ public partial class Home : ComponentBase
     private void CurrentKiosk(string id)
     {
         _kioskId = id;
-        _calculateRequest.Kiosk = _kiosks.Find(x => x.Id == byte.Parse(id));
+        _calculateRequest.Kiosk = _kiosks.Find(x => x.Id == Convert.ToUInt16(id));
     }
 
     private void CurrentStore(string name)
@@ -30,7 +30,6 @@ public partial class Home : ComponentBase
     {
         Calculation calculation = new();
         _path = calculation.GetStoreWay(_calculateRequest);
-        StateHasChanged();
     }
 
     protected override void OnInitialized()
