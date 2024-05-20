@@ -13,7 +13,7 @@ public class Calculation
 
         if (calculateRequest.Kiosk!.Location!.Floor != calculateRequest.Store!.Location.Floor)
         {
-            // Merdiven Asansör'den yakın olanı seç.
+            // Merdiven ve Asansör'den yakın olanı seç.
             foreach (var verticalTransport in StaticData.VerticalTransportations)
             {
                 var colDifference = Math.Abs(calculateRequest.Kiosk.Location.Column - verticalTransport.Location.Column);
@@ -65,9 +65,7 @@ public class Calculation
                 }
             }
 
-
             path.Add($"{closeTransport.Name} kullanınız.");
-
 
             if (closeTransport.Location.Row != calculateRequest.Store.Location.Row)
             {

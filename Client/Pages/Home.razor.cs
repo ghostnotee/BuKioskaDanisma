@@ -30,6 +30,7 @@ public partial class Home : ComponentBase
     {
         Calculation calculation = new();
         _path = calculation.GetStoreWay(_calculateRequest);
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
